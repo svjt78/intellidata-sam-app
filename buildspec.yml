@@ -8,7 +8,7 @@ phases:
       - pip3 install --upgrade pip
       - pip3 install pipenv --user
       - pip3 install awscli aws-sam-cli
-      - pipenv run sam package --template-file template.yml --s3-bucket intellidatastatic --output-template-file packaged.yml
+      - sam package --template-file template.yml --s3-bucket intellidatastatic --output-template-file packaged.yml
 artifacts:
   files:
     - packaged-template.yml

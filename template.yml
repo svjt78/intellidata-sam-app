@@ -14,7 +14,7 @@ Resources:
   PostProductFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: intellidata-sam-app/products/productpost/
+      CodeUri: products/productpost/
       Handler: productpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -45,7 +45,7 @@ Resources:
   GetProductFunction:
       Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
       Properties:
-        CodeUri: intellidata-sam-app/products/productget/
+        CodeUri: products/productget/
         Handler: productget.lambda_handler
         Runtime: python3.7
         Events:
@@ -73,7 +73,7 @@ Resources:
   RefreshProductFunction:
         Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
         Properties:
-          CodeUri: intellidata-sam-app/products/refreshproduct/
+          CodeUri: products/refreshproduct/
           Handler: refreshproduct.lambda_handler
           Runtime: python3.7
           Events:
@@ -101,7 +101,7 @@ Resources:
   GetProductHistoryFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: intellidata-sam-app/products/productgethistory/
+      CodeUri: products/productgethistory/
       Handler: productgethistory.lambda_handler
       Runtime: python3.7
       Events:
@@ -130,7 +130,7 @@ Resources:
   BulkPostProductFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: intellidata-sam-app/products/bulkproductpost/
+      CodeUri: products/bulkproductpost/
       Handler: bulkproductpost.lambda_handler
       Runtime: python3.7
       Events:

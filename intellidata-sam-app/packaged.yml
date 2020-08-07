@@ -1,0 +1,202 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 180
+Resources:
+  PostProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/7290f7ebe80c9ff232714615138b05c2
+      Handler: productpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTable
+  GetProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/6eb2fbc461f7a1906e4c7e6171767345
+      Handler: productget.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI/latest
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTable
+  RefreshProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/a8ab593a43df3b467e27d37d35acc257
+      Handler: refreshproduct.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI/refresh
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTable
+  GetProductHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/d31404aa41666102cae8c0690f85dbd6
+      Handler: productgethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI/history
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTable
+  BulkPostProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/c88a245fb99c40967ebdb394e9eef426
+      Handler: bulkproductpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI/upload
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTable
+  intellidataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: intellidataTable
+      AttributeDefinitions:
+      - AttributeName: PRODUCT_ID
+        AttributeType: S
+      - AttributeName: ITEM_ID
+        AttributeType: N
+      KeySchema:
+      - AttributeName: PRODUCT_ID
+        KeyType: HASH
+      - AttributeName: ITEM_ID
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+Outputs:
+  intellidataProductAPI:
+    Description: API Gateway endpoint URL for Prod stage for nrt_post function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/intellidataProductAPI/
+  PostProductFunction:
+    Description: NRT Post Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - PostProductFunction
+      - Arn
+  PostProductFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Post function
+    Value:
+      Fn::GetAtt:
+      - PostProductFunctionRole
+      - Arn
+  GetProductFunction:
+    Description: NRT Get Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - GetProductFunction
+      - Arn
+  GetProductFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Get function
+    Value:
+      Fn::GetAtt:
+      - GetProductFunctionRole
+      - Arn
+  intellidataTable:
+    Description: DynamoDB table ARN
+    Value:
+      Fn::GetAtt:
+      - intellidataTable
+      - Arn

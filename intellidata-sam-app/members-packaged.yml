@@ -9,17 +9,17 @@ Globals:
   Function:
     Timeout: 180
 Resources:
-  PostProductFunction:
+  PostmemberFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/91665366cb9d2ba92d474680f680910d
-      Handler: productpost.lambda_handler
+      CodeUri: s3://intellidatastatic/ab3e328ffcafb50e1a23a19ac1125322
+      Handler: memberpost.lambda_handler
       Runtime: python3.7
       Events:
-        intellidataProductAPI:
+        intellidataMemberAPI:
           Type: Api
           Properties:
-            Path: /intellidataProductAPI
+            Path: /intellidataMemberAPI
             Method: post
       Policies:
       - Version: '2012-10-17'
@@ -37,18 +37,18 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
-  GetProductFunction:
+              - :table/intellidataMemberTable
+  GetmemberFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/e16d281adce38def1b9e7adab29e7acd
-      Handler: productget.lambda_handler
+      CodeUri: s3://intellidatastatic/f2c38a52bd888792baf85b91c4491b33
+      Handler: memberget.lambda_handler
       Runtime: python3.7
       Events:
-        intellidataProductAPI:
+        intellidataMemberAPI:
           Type: Api
           Properties:
-            Path: /intellidataProductAPI/latest
+            Path: /intellidataMemberAPI/latest
             Method: get
       Policies:
       - Version: '2012-10-17'
@@ -64,18 +64,18 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
-  RefreshProductFunction:
+              - :table/intellidataMemberTable
+  RefreshmemberFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/07b8c27694612e8655b9e9495301fc19
-      Handler: refreshproduct.lambda_handler
+      CodeUri: s3://intellidatastatic/143ff877682148be0d5cd3c2f71f7983
+      Handler: refreshmember.lambda_handler
       Runtime: python3.7
       Events:
-        intellidataProductAPI:
+        intellidataMemberAPI:
           Type: Api
           Properties:
-            Path: /intellidataProductAPI/refresh
+            Path: /intellidataMemberAPI/refresh
             Method: get
       Policies:
       - Version: '2012-10-17'
@@ -91,18 +91,18 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
-  GetProductHistoryFunction:
+              - :table/intellidataMemberTable
+  GetmemberHistoryFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/4c506a70eb5626d2bf6890103d9eefb1
-      Handler: productgethistory.lambda_handler
+      CodeUri: s3://intellidatastatic/1aea60c922df626b7e509e105997e7e2
+      Handler: membergethistory.lambda_handler
       Runtime: python3.7
       Events:
-        intellidataProductAPI:
+        intellidataMemberAPI:
           Type: Api
           Properties:
-            Path: /intellidataProductAPI/history
+            Path: /intellidataMemberAPI/history
             Method: get
       Policies:
       - Version: '2012-10-17'
@@ -118,18 +118,18 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
-  BulkPostProductFunction:
+              - :table/intellidataMemberTable
+  BulkPostmemberFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/9d1b3371f7f4ad71eb92876ed9397c35
-      Handler: bulkproductpost.lambda_handler
+      CodeUri: s3://intellidatastatic/1b3b8287efe7e0140952c426ad568712
+      Handler: bulkmemberpost.lambda_handler
       Runtime: python3.7
       Events:
-        intellidataProductAPI:
+        intellidataMemberAPI:
           Type: Api
           Properties:
-            Path: /intellidataProductAPI/upload
+            Path: /intellidataMemberAPI/upload
             Method: post
       Policies:
       - Version: '2012-10-17'
@@ -147,18 +147,18 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
-  intellidataTable:
+              - :table/intellidataMemberTable
+  intellidataMemberTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: intellidataTable
+      TableName: intellidataMemberTable
       AttributeDefinitions:
-      - AttributeName: PRODUCT_ID
+      - AttributeName: MEMBER_ID
         AttributeType: S
       - AttributeName: ITEM_ID
         AttributeType: N
       KeySchema:
-      - AttributeName: PRODUCT_ID
+      - AttributeName: MEMBER_ID
         KeyType: HASH
       - AttributeName: ITEM_ID
         KeyType: RANGE
@@ -166,37 +166,37 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 Outputs:
-  intellidataProductAPI:
+  intellidataMemberAPI:
     Description: API Gateway endpoint URL for Prod stage for nrt_post function
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/intellidataProductAPI/
-  PostProductFunction:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataMemberAPI/
+  PostmemberFunction:
     Description: NRT Post Lambda Function ARN
     Value:
       Fn::GetAtt:
-      - PostProductFunction
+      - PostmemberFunction
       - Arn
-  PostProductFunctionIamRole:
+  PostmemberFunctionIamRole:
     Description: Implicit IAM Role created for NRT Post function
     Value:
       Fn::GetAtt:
-      - PostProductFunctionRole
+      - PostmemberFunctionRole
       - Arn
-  GetProductFunction:
+  GetmemberFunction:
     Description: NRT Get Lambda Function ARN
     Value:
       Fn::GetAtt:
-      - GetProductFunction
+      - GetmemberFunction
       - Arn
-  GetProductFunctionIamRole:
+  GetmemberFunctionIamRole:
     Description: Implicit IAM Role created for NRT Get function
     Value:
       Fn::GetAtt:
-      - GetProductFunctionRole
+      - GetmemberFunctionRole
       - Arn
-  intellidataTable:
+  intellidataMemberTable:
     Description: DynamoDB table ARN
     Value:
       Fn::GetAtt:
-      - intellidataTable
+      - intellidataMemberTable
       - Arn

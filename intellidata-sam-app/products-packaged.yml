@@ -12,7 +12,7 @@ Resources:
   PostProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/91665366cb9d2ba92d474680f680910d
+      CodeUri: s3://intellidatastatic/ac3aab445e3bc6d9d0c8d23f5916d409
       Handler: productpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -37,11 +37,11 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
+              - :table/intellidataProductTable
   GetProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/e16d281adce38def1b9e7adab29e7acd
+      CodeUri: s3://intellidatastatic/b28c1107fda7292c43e4c81307b1ff84
       Handler: productget.lambda_handler
       Runtime: python3.7
       Events:
@@ -64,11 +64,11 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
+              - :table/intellidataProductTable
   RefreshProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/07b8c27694612e8655b9e9495301fc19
+      CodeUri: s3://intellidatastatic/e97599bd0fa067bb63966bec9ac9f735
       Handler: refreshproduct.lambda_handler
       Runtime: python3.7
       Events:
@@ -91,11 +91,11 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
+              - :table/intellidataProductTable
   GetProductHistoryFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/4c506a70eb5626d2bf6890103d9eefb1
+      CodeUri: s3://intellidatastatic/4f3e6aded0fb8ca6af867ba87e1cb7ce
       Handler: productgethistory.lambda_handler
       Runtime: python3.7
       Events:
@@ -118,7 +118,7 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
+              - :table/intellidataProductTable
   BulkPostProductFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -147,11 +147,11 @@ Resources:
               - Ref: AWS::Region
               - ':'
               - Ref: AWS::AccountId
-              - :table/intellidataTable
-  intellidataTable:
+              - :table/intellidataProductTable
+  intellidataProductTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: intellidataTable
+      TableName: intellidataProductTable
       AttributeDefinitions:
       - AttributeName: PRODUCT_ID
         AttributeType: S
@@ -194,9 +194,9 @@ Outputs:
       Fn::GetAtt:
       - GetProductFunctionRole
       - Arn
-  intellidataTable:
+  intellidataProductTable:
     Description: DynamoDB table ARN
     Value:
       Fn::GetAtt:
-      - intellidataTable
+      - intellidataProductTable
       - Arn

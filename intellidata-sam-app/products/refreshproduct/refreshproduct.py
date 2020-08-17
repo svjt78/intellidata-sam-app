@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
 
     # select the table
-    table = dynamodb.Table('intellidataTable')
+    table = dynamodb.Table('intellidataProductTable')
 
     ident = event['queryStringParameters']['ident']
 

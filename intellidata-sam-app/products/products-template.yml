@@ -39,7 +39,7 @@ Resources:
                       - Ref: 'AWS::Region'
                       - ':'
                       - Ref: 'AWS::AccountId'
-                      - ':table/intellidataTable'
+                      - ':table/intellidataProductTable'
 
 
   GetProductFunction:
@@ -68,7 +68,7 @@ Resources:
                             - Ref: 'AWS::Region'
                             - ':'
                             - Ref: 'AWS::AccountId'
-                            - ':table/intellidataTable'
+                            - ':table/intellidataProductTable'
 
   RefreshProductFunction:
         Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -96,7 +96,7 @@ Resources:
                               - Ref: 'AWS::Region'
                               - ':'
                               - Ref: 'AWS::AccountId'
-                              - ':table/intellidataTable'
+                              - ':table/intellidataProductTable'
 
   GetProductHistoryFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -124,7 +124,7 @@ Resources:
                           - Ref: 'AWS::Region'
                           - ':'
                           - Ref: 'AWS::AccountId'
-                          - ':table/intellidataTable'
+                          - ':table/intellidataProductTable'
 
 
   BulkPostProductFunction:
@@ -155,13 +155,13 @@ Resources:
                       - Ref: 'AWS::Region'
                       - ':'
                       - Ref: 'AWS::AccountId'
-                      - ':table/intellidataTable'
+                      - ':table/intellidataProductTable'
 
 
-  intellidataTable:
+  intellidataProductTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
-      TableName: intellidataTable
+      TableName: intellidataProductTable
       AttributeDefinitions:
         - AttributeName: PRODUCT_ID
           AttributeType: S
@@ -195,6 +195,6 @@ Outputs:
   GetProductFunctionIamRole:
     Description: "Implicit IAM Role created for NRT Get function"
     Value: !GetAtt GetProductFunctionRole.Arn
-  intellidataTable:
+  intellidataProductTable:
     Description: "DynamoDB table ARN"
-    Value: !GetAtt intellidataTable.Arn
+    Value: !GetAtt intellidataProductTable.Arn

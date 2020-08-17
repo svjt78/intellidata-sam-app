@@ -13,7 +13,7 @@ def lambda_handler(event, context):
 
 	dynamodb = boto3.resource('dynamodb')
 
-	table = dynamodb.Table('intellidataTable')
+	table = dynamodb.Table('intellidataProductTable')
 	event=json.loads(event['body'])
 
 	try:

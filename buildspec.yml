@@ -1,0 +1,14 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+        python: 3.8
+  build:
+    commands:
+      - pip3 install --upgrade pip
+    #  - pip3 install pipenv --user
+      - pip3 install awscli aws-sam-cli
+      - aws cloudformation package --template-file template.yml --s3-bucket intellidatastatic --output-template-file packaged.yml
+artifacts:
+  files:
+    - packaged.yml

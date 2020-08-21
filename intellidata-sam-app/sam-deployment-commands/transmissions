@@ -1,0 +1,6 @@
+sam package     --template-file transmissions-template.yml     --output-template-file transmissions-packaged.yml --
+s3-bucket intellidatastatic
+
+
+sam deploy --template-file transmissions-packaged.yml --capabilities CAPABILITY_IAM --stack-name intellidatatransmi
+ssionstack

@@ -13,7 +13,7 @@ def lambda_handler(event, context):
 
 	dynamodb = boto3.resource('dynamodb')
 
-	table = dynamodb.Table('intellidataMemberTable')
+	table = dynamodb.Table('intellidataEmployerTable')
 	data = []
 	data=json.loads(event['body'])
 
@@ -23,28 +23,25 @@ def lambda_handler(event, context):
 		  try:
 			  table.put_item(
 		         Item={
-		            'MEMBER_ID': data[ix]["memberid"],
+		            'EMPLOYER_ID': data[ix]["employerid"],
 		            'LOCAL_ID': data[ix]["id"],
 					'ITEM_ID': ts,
 		            'NAME': data[ix]["name"],
 		            'SLUG': data[ix]["slug"],
-		            'AGE': data[ix]["age"],
-
+		            'DESCRIPTION': data[ix]["description"],
+		            'FEDERAL_EMPLOYER_IDENTIFICATION_NUMBER': data[ix]["FederalEmployerIdentificationNumber"],
+		            'CARRIER_MASTER_AGREEMENT_NUMBER': data[ix]["CarrierMasterAgreementNumber"],
 					'ADDRESS_LINE_1': data[ix]["address_line_1"],
 					'ADDRESS_LINE_2': data[ix]["address_line_2"],
 					'CITY': data[ix]["city"],
 					'STATE': data[ix]["state"],
 					'ZIPCODE': data[ix]["zipcode"],
-					
-		            'EMAIL': data[ix]["email"],
-		            'PHONE': data[ix]["phone"],
-		            'GROUP': data[ix]["group"],
-					'CREATOR': data[ix]["creator"],
-		            'MEMBER_DATE': data[ix]["member_date"],
-		            'SMS': data[ix]["sms"],
-		            'EMAILER': data[ix]["emailer"],
-					'ARTEFACT': data[ix]["artefact"],
-					'CONNECTION': data[ix]["backend_SOR_connection"],
+					'PURPOSE': data[ix]["purpose"],
+					'PHOTO': data[ix]["photo"],
+					'TRANSMISSION': data[ix]["transmissionid"],
+		            'CREATOR': data[ix]["creator"],
+		            'EMPLOYER_DATE': data[ix]["employer_date"],
+		            'CONNECTION': data[ix]["backend_SOR_connection"],
 					'RECORD_STATUS': data[ix]["record_status"],
 					'COMMIT_INDICATOR': data[ix]["commit_indicator"],
 					'RESPONSE': data[ix]["response"]
@@ -56,5 +53,5 @@ def lambda_handler(event, context):
 
 		  except Exception as e:
 		        print(e)
-		        print('Error in reading data from intellidataTable')
+		        print('Error in reading data from intellidataEmployerTable')
 		        raise e

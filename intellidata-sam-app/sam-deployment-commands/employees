@@ -1,0 +1,5 @@
+sam package     --template-file employees-template.yml     --output-template-file employees-packaged.yml --s3-bucke
+t intellidatastatic
+
+sam deploy --template-file employees-packaged.yml --capabilities CAPABILITY_IAM --stack-name intellidataemployeesta
+ck

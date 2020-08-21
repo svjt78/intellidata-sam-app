@@ -1,0 +1,202 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 180
+Resources:
+  PosttransmissionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/53ed8e137f944bbfbc09b3981c3cbd9c
+      Handler: transmissionpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  GettransmissionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/355251d04ce9b21c14700edb7a90cede
+      Handler: transmissionget.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI/latest
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  RefreshtransmissionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/9633d4420dc2b2f5b211fac99018153a
+      Handler: refreshtransmission.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI/refresh
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  GettransmissionHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/94dd2f49d36af7d1bdec53c1a009d1e3
+      Handler: transmissiongethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI/history
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  BulkPosttransmissionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic/68e424e338965bd502963e29fb3e30ac
+      Handler: bulktransmissionpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI/upload
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  intellidataTransmissionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: intellidataTransmissionTable
+      AttributeDefinitions:
+      - AttributeName: TRANSMISSION_ID
+        AttributeType: S
+      - AttributeName: ITEM_ID
+        AttributeType: N
+      KeySchema:
+      - AttributeName: TRANSMISSION_ID
+        KeyType: HASH
+      - AttributeName: ITEM_ID
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+Outputs:
+  intellidataTransmissionAPI:
+    Description: API Gateway endpoint URL for Prod stage for nrt_post function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataTransmissionAPI/
+  PosttransmissionFunction:
+    Description: NRT Post Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - PosttransmissionFunction
+      - Arn
+  PosttransmissionFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Post function
+    Value:
+      Fn::GetAtt:
+      - PosttransmissionFunctionRole
+      - Arn
+  GettransmissionFunction:
+    Description: NRT Get Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - GettransmissionFunction
+      - Arn
+  GettransmissionFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Get function
+    Value:
+      Fn::GetAtt:
+      - GettransmissionFunctionRole
+      - Arn
+  intellidataTransmissionTable:
+    Description: DynamoDB table ARN
+    Value:
+      Fn::GetAtt:
+      - intellidataTransmissionTable
+      - Arn

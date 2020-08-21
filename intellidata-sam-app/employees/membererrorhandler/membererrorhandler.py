@@ -12,7 +12,7 @@ def lambda_handler(event, context):
 	)
 
 	bucket = client.Bucket('intellidatastatic')
-	keyname = "media/members.csv"
+	keyname = "media/employees.csv"
 
     csvfile = s3.get_object(Bucket=bucket, Key=keyname)
     csvcontent = csvfile['Body'].read().split(b'\n')

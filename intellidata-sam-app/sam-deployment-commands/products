@@ -1,0 +1,5 @@
+sam package     --template-file products-template.yml     --output-template-file products-packaged.yml --s3-bucket
+intellidatastatic
+
+
+sam deploy --template-file products-packaged.yml --capabilities CAPABILITY_IAM --stack-name intellidataproductstack

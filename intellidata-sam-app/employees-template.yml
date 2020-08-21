@@ -14,14 +14,14 @@ Resources:
   PostmemberFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: members/memberpost/
+      CodeUri: employees/memberpost/
       Handler: memberpost.lambda_handler
       Runtime: python3.7
       Events:
-        intellidataMemberAPI:
+        intellidataEmployeeAPI:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /intellidataMemberAPI
+            Path: /intellidataEmployeeAPI
             Method: post
       Policies:
           - Version: '2012-10-17'
@@ -39,20 +39,20 @@ Resources:
                       - Ref: 'AWS::Region'
                       - ':'
                       - Ref: 'AWS::AccountId'
-                      - ':table/intellidataMemberTable'
+                      - ':table/intellidataEmployeeTable'
 
 
   GetmemberFunction:
       Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
       Properties:
-        CodeUri: members/memberget/
+        CodeUri: employees/memberget/
         Handler: memberget.lambda_handler
         Runtime: python3.7
         Events:
-          intellidataMemberAPI:
+          intellidataEmployeeAPI:
             Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
             Properties:
-              Path: /intellidataMemberAPI/latest
+              Path: /intellidataEmployeeAPI/latest
               Method: get
         Policies:
                 - Version: '2012-10-17'
@@ -68,19 +68,19 @@ Resources:
                             - Ref: 'AWS::Region'
                             - ':'
                             - Ref: 'AWS::AccountId'
-                            - ':table/intellidataMemberTable'
+                            - ':table/intellidataEmployeeTable'
 
   RefreshmemberFunction:
         Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
         Properties:
-          CodeUri: members/refreshmember/
+          CodeUri: employees/refreshmember/
           Handler: refreshmember.lambda_handler
           Runtime: python3.7
           Events:
-            intellidataMemberAPI:
+            intellidataEmployeeAPI:
               Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
               Properties:
-                Path: /intellidataMemberAPI/refresh
+                Path: /intellidataEmployeeAPI/refresh
                 Method: get
           Policies:
                   - Version: '2012-10-17'
@@ -96,19 +96,19 @@ Resources:
                               - Ref: 'AWS::Region'
                               - ':'
                               - Ref: 'AWS::AccountId'
-                              - ':table/intellidataMemberTable'
+                              - ':table/intellidataEmployeeTable'
 
   GetmemberHistoryFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: members/membergethistory/
+      CodeUri: employees/membergethistory/
       Handler: membergethistory.lambda_handler
       Runtime: python3.7
       Events:
-        intellidataMemberAPI:
+        intellidataEmployeeAPI:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /intellidataMemberAPI/history
+            Path: /intellidataEmployeeAPI/history
             Method: get
       Policies:
               - Version: '2012-10-17'
@@ -124,20 +124,20 @@ Resources:
                           - Ref: 'AWS::Region'
                           - ':'
                           - Ref: 'AWS::AccountId'
-                          - ':table/intellidataMemberTable'
+                          - ':table/intellidataEmployeeTable'
 
 
   BulkPostmemberFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: members/bulkmemberpost/
+      CodeUri: employees/bulkmemberpost/
       Handler: bulkmemberpost.lambda_handler
       Runtime: python3.7
       Events:
-        intellidataMemberAPI:
+        intellidataEmployeeAPI:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /intellidataMemberAPI/upload
+            Path: /intellidataEmployeeAPI/upload
             Method: post
       Policies:
           - Version: '2012-10-17'
@@ -155,20 +155,20 @@ Resources:
                       - Ref: 'AWS::Region'
                       - ':'
                       - Ref: 'AWS::AccountId'
-                      - ':table/intellidataMemberTable'
+                      - ':table/intellidataEmployeeTable'
 
 
-  intellidataMemberTable:
+  intellidataEmployeeTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
-      TableName: intellidataMemberTable
+      TableName: intellidataEmployeeTable
       AttributeDefinitions:
-        - AttributeName: MEMBER_ID
+        - AttributeName: EMPLOYEE_ID
           AttributeType: S
         - AttributeName: ITEM_ID
           AttributeType: N
       KeySchema:
-        - AttributeName: MEMBER_ID
+        - AttributeName: EMPLOYEE_ID
           KeyType: HASH
         - AttributeName: ITEM_ID
           KeyType: RANGE
@@ -180,9 +180,9 @@ Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  intellidataMemberAPI:
+  intellidataEmployeeAPI:
     Description: "API Gateway endpoint URL for Prod stage for nrt_post function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataMemberAPI/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataEmployeeAPI/"
   PostmemberFunction:
     Description: "NRT Post Lambda Function ARN"
     Value: !GetAtt PostmemberFunction.Arn
@@ -195,6 +195,6 @@ Outputs:
   GetmemberFunctionIamRole:
     Description: "Implicit IAM Role created for NRT Get function"
     Value: !GetAtt GetmemberFunctionRole.Arn
-  intellidataMemberTable:
+  intellidataEmployeeTable:
     Description: "DynamoDB table ARN"
-    Value: !GetAtt intellidataMemberTable.Arn
+    Value: !GetAtt intellidataEmployeeTable.Arn

@@ -1,0 +1,200 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+
+  Sample SAM Template for sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 180
+
+Resources:
+  PostemployerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employers/employerpost/
+      Handler: employerpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployerAPI
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataEmployerTable'
+
+
+  GetemployerFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: employers/employerget/
+        Handler: employerget.lambda_handler
+        Runtime: python3.7
+        Events:
+          intellidataEmployerAPI:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              Path: /intellidataEmployerAPI/latest
+              Method: get
+        Policies:
+                - Version: '2012-10-17'
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                        - 'dynamodb:GetItem'
+                        - 'dynamodb:Query'
+                      Resource:
+                        'Fn::Join':
+                          - ''
+                          - - 'arn:aws:dynamodb:'
+                            - Ref: 'AWS::Region'
+                            - ':'
+                            - Ref: 'AWS::AccountId'
+                            - ':table/intellidataEmployerTable'
+
+  RefreshemployerFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+          CodeUri: employers/refreshemployer/
+          Handler: refreshemployer.lambda_handler
+          Runtime: python3.7
+          Events:
+            intellidataEmployerAPI:
+              Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+              Properties:
+                Path: /intellidataEmployerAPI/refresh
+                Method: get
+          Policies:
+                  - Version: '2012-10-17'
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - 'dynamodb:GetItem'
+                          - 'dynamodb:Query'
+                        Resource:
+                          'Fn::Join':
+                            - ''
+                            - - 'arn:aws:dynamodb:'
+                              - Ref: 'AWS::Region'
+                              - ':'
+                              - Ref: 'AWS::AccountId'
+                              - ':table/intellidataEmployerTable'
+
+  GetemployerHistoryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employers/employergethistory/
+      Handler: employergethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployerAPI/history
+            Method: get
+      Policies:
+              - Version: '2012-10-17'
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'dynamodb:GetItem'
+                      - 'dynamodb:Query'
+                    Resource:
+                      'Fn::Join':
+                        - ''
+                        - - 'arn:aws:dynamodb:'
+                          - Ref: 'AWS::Region'
+                          - ':'
+                          - Ref: 'AWS::AccountId'
+                          - ':table/intellidataEmployerTable'
+
+
+  BulkPostemployerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employers/bulkemployerpost/
+      Handler: bulkemployerpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployerAPI/upload
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataEmployerTable'
+
+
+  intellidataEmployerTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: intellidataEmployerTable
+      AttributeDefinitions:
+        - AttributeName: EMPLOYEE_ID
+          AttributeType: S
+        - AttributeName: ITEM_ID
+          AttributeType: N
+      KeySchema:
+        - AttributeName: EMPLOYEE_ID
+          KeyType: HASH
+        - AttributeName: ITEM_ID
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  intellidataEmployerAPI:
+    Description: "API Gateway endpoint URL for Prod stage for nrt_post function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataEmployerAPI/"
+  PostemployerFunction:
+    Description: "NRT Post Lambda Function ARN"
+    Value: !GetAtt PostemployerFunction.Arn
+  PostemployerFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Post function"
+    Value: !GetAtt PostemployerFunctionRole.Arn
+  GetemployerFunction:
+    Description: "NRT Get Lambda Function ARN"
+    Value: !GetAtt GetemployerFunction.Arn
+  GetemployerFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Get function"
+    Value: !GetAtt GetemployerFunctionRole.Arn
+  intellidataEmployerTable:
+    Description: "DynamoDB table ARN"
+    Value: !GetAtt intellidataEmployerTable.Arn

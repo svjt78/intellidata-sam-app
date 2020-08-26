@@ -9,11 +9,11 @@ Globals:
   Function:
     Timeout: 180
 Resources:
-  PostmemberFunction:
+  PostemployeeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/55c2bfdd3bcbfd1b6567ec13e7a7d903
-      Handler: memberpost.lambda_handler
+      CodeUri: s3://intellidatastatic1/d6ac167a04ce2c2c24a663869ac9e04a
+      Handler: employeepost.lambda_handler
       Runtime: python3.7
       Events:
         intellidataEmployeeAPI:
@@ -38,11 +38,11 @@ Resources:
               - ':'
               - Ref: AWS::AccountId
               - :table/intellidataEmployeeTable
-  GetmemberFunction:
+  GetemployeeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/01cf6f0373d974906e11a1065a6ea2b3
-      Handler: memberget.lambda_handler
+      CodeUri: s3://intellidatastatic1/0638699d6d8b03eaec019f0f2dfb016c
+      Handler: employeeget.lambda_handler
       Runtime: python3.7
       Events:
         intellidataEmployeeAPI:
@@ -65,11 +65,11 @@ Resources:
               - ':'
               - Ref: AWS::AccountId
               - :table/intellidataEmployeeTable
-  RefreshmemberFunction:
+  RefreshemployeeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/957e4dbcecda7739abc52228396437ec
-      Handler: refreshmember.lambda_handler
+      CodeUri: s3://intellidatastatic1/4158fd8a2c29751dab28448d830ff79f
+      Handler: refreshemployee.lambda_handler
       Runtime: python3.7
       Events:
         intellidataEmployeeAPI:
@@ -92,11 +92,11 @@ Resources:
               - ':'
               - Ref: AWS::AccountId
               - :table/intellidataEmployeeTable
-  GetmemberHistoryFunction:
+  GetemployeeHistoryFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/44e16b3ed096ffc47a6b6f0f0efb7812
-      Handler: membergethistory.lambda_handler
+      CodeUri: s3://intellidatastatic1/b896e34109e1fc96f30bfa7a18490743
+      Handler: employeegethistory.lambda_handler
       Runtime: python3.7
       Events:
         intellidataEmployeeAPI:
@@ -119,11 +119,11 @@ Resources:
               - ':'
               - Ref: AWS::AccountId
               - :table/intellidataEmployeeTable
-  BulkPostmemberFunction:
+  BulkPostemployeeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/565ed2a90ee13a12768f79b3ff4a9b34
-      Handler: bulkmemberpost.lambda_handler
+      CodeUri: s3://intellidatastatic1/e6c558a4835bc4bdd4aa83ca869e73a4
+      Handler: bulkemployeepost.lambda_handler
       Runtime: python3.7
       Events:
         intellidataEmployeeAPI:
@@ -170,29 +170,29 @@ Outputs:
     Description: API Gateway endpoint URL for Prod stage for nrt_post function
     Value:
       Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataEmployeeAPI/
-  PostmemberFunction:
+  PostemployeeFunction:
     Description: NRT Post Lambda Function ARN
     Value:
       Fn::GetAtt:
-      - PostmemberFunction
+      - PostemployeeFunction
       - Arn
-  PostmemberFunctionIamRole:
+  PostemployeeFunctionIamRole:
     Description: Implicit IAM Role created for NRT Post function
     Value:
       Fn::GetAtt:
-      - PostmemberFunctionRole
+      - PostemployeeFunctionRole
       - Arn
-  GetmemberFunction:
+  GetemployeeFunction:
     Description: NRT Get Lambda Function ARN
     Value:
       Fn::GetAtt:
-      - GetmemberFunction
+      - GetemployeeFunction
       - Arn
-  GetmemberFunctionIamRole:
+  GetemployeeFunctionIamRole:
     Description: Implicit IAM Role created for NRT Get function
     Value:
       Fn::GetAtt:
-      - GetmemberFunctionRole
+      - GetemployeeFunctionRole
       - Arn
   intellidataEmployeeTable:
     Description: DynamoDB table ARN

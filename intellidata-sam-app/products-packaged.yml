@@ -12,7 +12,7 @@ Resources:
   PostProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/ac3aab445e3bc6d9d0c8d23f5916d409
+      CodeUri: s3://intellidatastatic1/556a68b69a1605fc9d7a1114c302b453
       Handler: productpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -41,7 +41,7 @@ Resources:
   GetProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/b28c1107fda7292c43e4c81307b1ff84
+      CodeUri: s3://intellidatastatic1/25fd567d2bd539f9fccdabb35f08166b
       Handler: productget.lambda_handler
       Runtime: python3.7
       Events:
@@ -68,7 +68,7 @@ Resources:
   RefreshProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/e97599bd0fa067bb63966bec9ac9f735
+      CodeUri: s3://intellidatastatic1/bea8ef489301b1c69d1a96ea6aaf8276
       Handler: refreshproduct.lambda_handler
       Runtime: python3.7
       Events:
@@ -95,7 +95,7 @@ Resources:
   GetProductHistoryFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/4f3e6aded0fb8ca6af867ba87e1cb7ce
+      CodeUri: s3://intellidatastatic1/211d895ce612e78a560ffab545a43ee2
       Handler: productgethistory.lambda_handler
       Runtime: python3.7
       Events:
@@ -122,7 +122,7 @@ Resources:
   BulkPostProductFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/9d1b3371f7f4ad71eb92876ed9397c35
+      CodeUri: s3://intellidatastatic1/7fbb5d1e109fe585ca088c168ea837a9
       Handler: bulkproductpost.lambda_handler
       Runtime: python3.7
       Events:

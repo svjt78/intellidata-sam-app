@@ -38,7 +38,7 @@ def lambda_handler(event, context):
 					'ZIPCODE': data[ix]["zipcode"],
 					'PURPOSE': data[ix]["purpose"],
 					'PHOTO': data[ix]["photo"],
-					'TRANSMISSION': data[ix]["transmissionid"],
+					'TRANSMISSION': data[ix]["transmission"],
 		            'CREATOR': data[ix]["creator"],
 		            'EMPLOYER_DATE': data[ix]["employer_date"],
 		            'CONNECTION': data[ix]["backend_SOR_connection"],

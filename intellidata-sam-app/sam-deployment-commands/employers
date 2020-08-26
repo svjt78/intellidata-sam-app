@@ -1,6 +1,4 @@
-sam package     --template-file employers-template.yml     --output-template-file employers-packaged.yml --s3-bucke
-t intellidatastatic
+sam package     --template-file employers-template.yml     --output-template-file employers-packaged.yml --s3-bucket intellidatastatic1
 
 
-sam deploy --template-file employers-packaged.yml --capabilities CAPABILITY_IAM --stack-name intellidataemployersta
-ck
+sam deploy --template-file employers-packaged.yml --capabilities CAPABILITY_IAM --stack-name intellidataemployerstack

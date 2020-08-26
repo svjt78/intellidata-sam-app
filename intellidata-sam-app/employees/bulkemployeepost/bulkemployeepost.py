@@ -13,7 +13,7 @@ def lambda_handler(event, context):
 
 	dynamodb = boto3.resource('dynamodb')
 
-	table = dynamodb.Table('intellidataMemberTable')
+	table = dynamodb.Table('intellidataEmployeeTable')
 	data = []
 	data=json.loads(event['body'])
 
@@ -25,7 +25,7 @@ def lambda_handler(event, context):
 		         Item={
 		            'EMPLOYEE_ID': data[ix]["employeeid"],
 		            'LOCAL_ID': data[ix]["id"],
-					'ITEM': ts,
+					'ITEM_ID': ts,
 					'SSN': data[ix]["ssn"],
 		            'NAME': data[ix]["name"],
 		            'SLUG': data[ix]["slug"],
@@ -55,7 +55,7 @@ def lambda_handler(event, context):
 					'MOBILE_PHONE': data[ix]["mobile_phone"],
 					'ENROLLMENT_METHOD': data[ix]["enrollment_method"],
 					'EMPLOYMENT_INFORMATION': data[ix]["employment_information"],
-					'EMPLOYER': data[ix]["employerid"],
+					'EMPLOYER': data[ix]["employer"],
 					'CREATOR': data[ix]["creator"],
 					'EMPLOYEE_DATE': data[ix]["employee_date"],
 					'SMS': data[ix]["sms"],
@@ -73,5 +73,5 @@ def lambda_handler(event, context):
 
 		  except Exception as e:
 		        print(e)
-		        print('Error in reading data from intellidataMemberTable')
+		        print('Error in reading data from intellidataEmployeeTable')
 		        raise e

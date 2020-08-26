@@ -12,7 +12,7 @@ Resources:
   PosttransmissionFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/53ed8e137f944bbfbc09b3981c3cbd9c
+      CodeUri: s3://intellidatastatic1/53ed8e137f944bbfbc09b3981c3cbd9c
       Handler: transmissionpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -41,7 +41,7 @@ Resources:
   GettransmissionFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/355251d04ce9b21c14700edb7a90cede
+      CodeUri: s3://intellidatastatic1/355251d04ce9b21c14700edb7a90cede
       Handler: transmissionget.lambda_handler
       Runtime: python3.7
       Events:
@@ -68,7 +68,7 @@ Resources:
   RefreshtransmissionFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/9633d4420dc2b2f5b211fac99018153a
+      CodeUri: s3://intellidatastatic1/9633d4420dc2b2f5b211fac99018153a
       Handler: refreshtransmission.lambda_handler
       Runtime: python3.7
       Events:
@@ -95,7 +95,7 @@ Resources:
   GettransmissionHistoryFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/94dd2f49d36af7d1bdec53c1a009d1e3
+      CodeUri: s3://intellidatastatic1/94dd2f49d36af7d1bdec53c1a009d1e3
       Handler: transmissiongethistory.lambda_handler
       Runtime: python3.7
       Events:
@@ -122,7 +122,7 @@ Resources:
   BulkPosttransmissionFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/68e424e338965bd502963e29fb3e30ac
+      CodeUri: s3://intellidatastatic1/68e424e338965bd502963e29fb3e30ac
       Handler: bulktransmissionpost.lambda_handler
       Runtime: python3.7
       Events:

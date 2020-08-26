@@ -1,0 +1,3 @@
+sam package     --template-file standalone-lambda-template.yml     --output-template-file standalone-lambda--packaged.yml --s3-bucket intellidatastatic1
+
+sam deploy --template-file standalone-lambda-packaged.yml --capabilities CAPABILITY_IAM --stack-name intellidatalambdastack

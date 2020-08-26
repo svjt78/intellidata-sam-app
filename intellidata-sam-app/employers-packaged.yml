@@ -12,7 +12,7 @@ Resources:
   PostemployerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/e6c73d671ad35deb91d52a20f97217cd
+      CodeUri: s3://intellidatastatic1/5877cd65d1b2c49cd5fdac8270744228
       Handler: employerpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -41,7 +41,7 @@ Resources:
   GetemployerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/fbff951c43f53e9ebee415e4953682ca
+      CodeUri: s3://intellidatastatic1/fbff951c43f53e9ebee415e4953682ca
       Handler: employerget.lambda_handler
       Runtime: python3.7
       Events:
@@ -68,7 +68,7 @@ Resources:
   RefreshemployerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/d37c3755e71d21699e1738b3a6a7aba4
+      CodeUri: s3://intellidatastatic1/d37c3755e71d21699e1738b3a6a7aba4
       Handler: refreshemployer.lambda_handler
       Runtime: python3.7
       Events:
@@ -95,7 +95,7 @@ Resources:
   GetemployerHistoryFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/5ee173a3feec3fe5aba25e4b008e9d61
+      CodeUri: s3://intellidatastatic1/5ee173a3feec3fe5aba25e4b008e9d61
       Handler: employergethistory.lambda_handler
       Runtime: python3.7
       Events:
@@ -122,7 +122,7 @@ Resources:
   BulkPostemployerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic/5c9c60e32c58e402d9d3c33f950f39ef
+      CodeUri: s3://intellidatastatic1/2259fb8d7e532e5247389adbab5ba632
       Handler: bulkemployerpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -153,12 +153,12 @@ Resources:
     Properties:
       TableName: intellidataEmployerTable
       AttributeDefinitions:
-      - AttributeName: EMPLOYEE_ID
+      - AttributeName: EMPLOYER_ID
         AttributeType: S
       - AttributeName: ITEM_ID
         AttributeType: N
       KeySchema:
-      - AttributeName: EMPLOYEE_ID
+      - AttributeName: EMPLOYER_ID
         KeyType: HASH
       - AttributeName: ITEM_ID
         KeyType: RANGE

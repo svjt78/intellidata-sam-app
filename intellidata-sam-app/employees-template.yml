@@ -11,11 +11,11 @@ Globals:
     Timeout: 180
 
 Resources:
-  PostmemberFunction:
+  PostemployeeFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: employees/memberpost/
-      Handler: memberpost.lambda_handler
+      CodeUri: employees/employeepost/
+      Handler: employeepost.lambda_handler
       Runtime: python3.7
       Events:
         intellidataEmployeeAPI:
@@ -42,11 +42,11 @@ Resources:
                       - ':table/intellidataEmployeeTable'
 
 
-  GetmemberFunction:
+  GetemployeeFunction:
       Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
       Properties:
-        CodeUri: employees/memberget/
-        Handler: memberget.lambda_handler
+        CodeUri: employees/employeeget/
+        Handler: employeeget.lambda_handler
         Runtime: python3.7
         Events:
           intellidataEmployeeAPI:
@@ -70,11 +70,11 @@ Resources:
                             - Ref: 'AWS::AccountId'
                             - ':table/intellidataEmployeeTable'
 
-  RefreshmemberFunction:
+  RefreshemployeeFunction:
         Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
         Properties:
-          CodeUri: employees/refreshmember/
-          Handler: refreshmember.lambda_handler
+          CodeUri: employees/refreshemployee/
+          Handler: refreshemployee.lambda_handler
           Runtime: python3.7
           Events:
             intellidataEmployeeAPI:
@@ -98,11 +98,11 @@ Resources:
                               - Ref: 'AWS::AccountId'
                               - ':table/intellidataEmployeeTable'
 
-  GetmemberHistoryFunction:
+  GetemployeeHistoryFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: employees/membergethistory/
-      Handler: membergethistory.lambda_handler
+      CodeUri: employees/employeegethistory/
+      Handler: employeegethistory.lambda_handler
       Runtime: python3.7
       Events:
         intellidataEmployeeAPI:
@@ -127,11 +127,11 @@ Resources:
                           - ':table/intellidataEmployeeTable'
 
 
-  BulkPostmemberFunction:
+  BulkPostemployeeFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: employees/bulkmemberpost/
-      Handler: bulkmemberpost.lambda_handler
+      CodeUri: employees/bulkemployeepost/
+      Handler: bulkemployeepost.lambda_handler
       Runtime: python3.7
       Events:
         intellidataEmployeeAPI:
@@ -183,18 +183,18 @@ Outputs:
   intellidataEmployeeAPI:
     Description: "API Gateway endpoint URL for Prod stage for nrt_post function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataEmployeeAPI/"
-  PostmemberFunction:
+  PostemployeeFunction:
     Description: "NRT Post Lambda Function ARN"
-    Value: !GetAtt PostmemberFunction.Arn
-  PostmemberFunctionIamRole:
+    Value: !GetAtt PostemployeeFunction.Arn
+  PostemployeeFunctionIamRole:
     Description: "Implicit IAM Role created for NRT Post function"
-    Value: !GetAtt PostmemberFunctionRole.Arn
-  GetmemberFunction:
+    Value: !GetAtt PostemployeeFunctionRole.Arn
+  GetemployeeFunction:
     Description: "NRT Get Lambda Function ARN"
-    Value: !GetAtt GetmemberFunction.Arn
-  GetmemberFunctionIamRole:
+    Value: !GetAtt GetemployeeFunction.Arn
+  GetemployeeFunctionIamRole:
     Description: "Implicit IAM Role created for NRT Get function"
-    Value: !GetAtt GetmemberFunctionRole.Arn
+    Value: !GetAtt GetemployeeFunctionRole.Arn
   intellidataEmployeeTable:
     Description: "DynamoDB table ARN"
     Value: !GetAtt intellidataEmployeeTable.Arn

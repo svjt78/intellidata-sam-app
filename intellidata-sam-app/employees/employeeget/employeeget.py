@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
 
     # select the table
-    table = dynamodb.Table('intellidataMemberTable')
+    table = dynamodb.Table('intellidataEmployeeTable')
 
     ident = event['queryStringParameters']['ident']
 
@@ -30,7 +30,7 @@ def lambda_handler(event, context):
 
     except Exception as e:
         print(e)
-        print('Error in reading data from intellidataMemberTable')
+        print('Error in reading data from intellidataEmployeeTable')
         raise e
 
 

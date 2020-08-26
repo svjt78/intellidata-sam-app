@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 180
+Resources:
+  IECrawlerTriggerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/07c0fc0d43359508ec306c854c7b6752
+      Handler: IECrawlerTrigger.lambda_handler
+      Runtime: python3.7
+  IEStandardizeTriggerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/cad609dc1601b8c380d4cfe103c19c29
+      Handler: IEStandardizeTrigger.lambda_handler
+      Runtime: python3.7

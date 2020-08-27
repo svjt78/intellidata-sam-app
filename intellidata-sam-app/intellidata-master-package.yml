@@ -1,0 +1,832 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 180
+Resources:
+  S3Bucket1:
+    Type: AWS::S3::Bucket
+  S3Bucket2:
+    Type: AWS::S3::Bucket
+  PosttransmissionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/53ed8e137f944bbfbc09b3981c3cbd9c
+      Handler: transmissionpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  GettransmissionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/355251d04ce9b21c14700edb7a90cede
+      Handler: transmissionget.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI/latest
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  RefreshtransmissionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/9633d4420dc2b2f5b211fac99018153a
+      Handler: refreshtransmission.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI/refresh
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  GettransmissionHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/94dd2f49d36af7d1bdec53c1a009d1e3
+      Handler: transmissiongethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI/history
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  BulkPosttransmissionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/68e424e338965bd502963e29fb3e30ac
+      Handler: bulktransmissionpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataTransmissionAPI/upload
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataTransmissionTable
+  intellidataTransmissionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: intellidataTransmissionTable
+      AttributeDefinitions:
+      - AttributeName: TRANSMISSION_ID
+        AttributeType: S
+      - AttributeName: ITEM_ID
+        AttributeType: N
+      KeySchema:
+      - AttributeName: TRANSMISSION_ID
+        KeyType: HASH
+      - AttributeName: ITEM_ID
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  PostemployerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/5877cd65d1b2c49cd5fdac8270744228
+      Handler: employerpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployerAPI
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployerTable
+  GetemployerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/fbff951c43f53e9ebee415e4953682ca
+      Handler: employerget.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployerAPI/latest
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployerTable
+  RefreshemployerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/d37c3755e71d21699e1738b3a6a7aba4
+      Handler: refreshemployer.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployerAPI/refresh
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployerTable
+  GetemployerHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/5ee173a3feec3fe5aba25e4b008e9d61
+      Handler: employergethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployerAPI/history
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployerTable
+  BulkPostemployerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/2259fb8d7e532e5247389adbab5ba632
+      Handler: bulkemployerpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployerAPI/upload
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployerTable
+  intellidataEmployerTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: intellidataEmployerTable
+      AttributeDefinitions:
+      - AttributeName: EMPLOYER_ID
+        AttributeType: S
+      - AttributeName: ITEM_ID
+        AttributeType: N
+      KeySchema:
+      - AttributeName: EMPLOYER_ID
+        KeyType: HASH
+      - AttributeName: ITEM_ID
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  PostProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/556a68b69a1605fc9d7a1114c302b453
+      Handler: productpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataProductTable
+  GetProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/25fd567d2bd539f9fccdabb35f08166b
+      Handler: productget.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI/latest
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataProductTable
+  RefreshProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/bea8ef489301b1c69d1a96ea6aaf8276
+      Handler: refreshproduct.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI/refresh
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataProductTable
+  GetProductHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/211d895ce612e78a560ffab545a43ee2
+      Handler: productgethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI/history
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataProductTable
+  BulkPostProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/7fbb5d1e109fe585ca088c168ea837a9
+      Handler: bulkproductpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataProductAPI/upload
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataProductTable
+  intellidataProductTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: intellidataProductTable
+      AttributeDefinitions:
+      - AttributeName: PRODUCT_ID
+        AttributeType: S
+      - AttributeName: ITEM_ID
+        AttributeType: N
+      KeySchema:
+      - AttributeName: PRODUCT_ID
+        KeyType: HASH
+      - AttributeName: ITEM_ID
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  PostemployeeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/d6ac167a04ce2c2c24a663869ac9e04a
+      Handler: employeepost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployeeAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployeeAPI
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployeeTable
+  GetemployeeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/0638699d6d8b03eaec019f0f2dfb016c
+      Handler: employeeget.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployeeAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployeeAPI/latest
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployeeTable
+  RefreshemployeeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/4158fd8a2c29751dab28448d830ff79f
+      Handler: refreshemployee.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployeeAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployeeAPI/refresh
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployeeTable
+  GetemployeeHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/b896e34109e1fc96f30bfa7a18490743
+      Handler: employeegethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployeeAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployeeAPI/history
+            Method: get
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:GetItem
+          - dynamodb:Query
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployeeTable
+  BulkPostemployeeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/e6c558a4835bc4bdd4aa83ca869e73a4
+      Handler: bulkemployeepost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployeeAPI:
+          Type: Api
+          Properties:
+            Path: /intellidataEmployeeAPI/upload
+            Method: post
+      Policies:
+      - Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:dynamodb:'
+              - Ref: AWS::Region
+              - ':'
+              - Ref: AWS::AccountId
+              - :table/intellidataEmployeeTable
+  intellidataEmployeeTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: intellidataEmployeeTable
+      AttributeDefinitions:
+      - AttributeName: EMPLOYEE_ID
+        AttributeType: S
+      - AttributeName: ITEM_ID
+        AttributeType: N
+      KeySchema:
+      - AttributeName: EMPLOYEE_ID
+        KeyType: HASH
+      - AttributeName: ITEM_ID
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  IECrawlerTriggerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/873fe94254e6b03f41ffcdb57d67a62e
+      Handler: IECrawlerTrigger.lambda_handler
+      Runtime: python3.7
+      Events:
+        S3Bucket:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: S3Bucket1
+            Events: s3:ObjectCreated:*
+    Policies:
+    - AWSGlueConsoleFullAccess
+  IEStandardizeTriggerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/eb07f743cf7712cba22f69c853cae9c2
+      Handler: IEStandardizeTrigger.lambda_handler
+      Runtime: python3.7
+  IntellidataAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/99baaaa8e41fa1a847709a5c25393b83
+      Handler: IntellidataAPI.lambda_handler
+      Runtime: python3.7
+      Events:
+        S3Bucket:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: S3Bucket2
+            Events: s3:ObjectCreated:*
+  AllowS3ToCallIECrawlerTrigger:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: IECrawlerTriggerFunction
+      Principal: s3.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+        - S3Bucket1
+        - Arn
+  AllowS3ToCallIntellidataAPI:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: IntellidataAPIFunction
+      Principal: s3.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+        - S3Bucket2
+        - Arn
+Outputs:
+  intellidataTransmissionAPI:
+    Description: API Gateway endpoint URL for Prod stage for nrt_post function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataTransmissionAPI/
+  PosttransmissionFunction:
+    Description: NRT Post Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - PosttransmissionFunction
+      - Arn
+  PosttransmissionFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Post function
+    Value:
+      Fn::GetAtt:
+      - PosttransmissionFunctionRole
+      - Arn
+  GettransmissionFunction:
+    Description: NRT Get Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - GettransmissionFunction
+      - Arn
+  GettransmissionFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Get function
+    Value:
+      Fn::GetAtt:
+      - GettransmissionFunctionRole
+      - Arn
+  intellidataTransmissionTable:
+    Description: DynamoDB table ARN
+    Value:
+      Fn::GetAtt:
+      - intellidataTransmissionTable
+      - Arn
+  intellidataEmployerAPI:
+    Description: API Gateway endpoint URL for Prod stage for nrt_post function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataEmployerAPI/
+  PostemployerFunction:
+    Description: NRT Post Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - PostemployerFunction
+      - Arn
+  PostemployerFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Post function
+    Value:
+      Fn::GetAtt:
+      - PostemployerFunctionRole
+      - Arn
+  GetemployerFunction:
+    Description: NRT Get Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - GetemployerFunction
+      - Arn
+  GetemployerFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Get function
+    Value:
+      Fn::GetAtt:
+      - GetemployerFunctionRole
+      - Arn
+  intellidataEmployerTable:
+    Description: DynamoDB table ARN
+    Value:
+      Fn::GetAtt:
+      - intellidataEmployerTable
+      - Arn
+  intellidataProductAPI:
+    Description: API Gateway endpoint URL for Prod stage for nrt_post function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/intellidataProductAPI/
+  PostProductFunction:
+    Description: NRT Post Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - PostProductFunction
+      - Arn
+  PostProductFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Post function
+    Value:
+      Fn::GetAtt:
+      - PostProductFunctionRole
+      - Arn
+  GetProductFunction:
+    Description: NRT Get Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - GetProductFunction
+      - Arn
+  GetProductFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Get function
+    Value:
+      Fn::GetAtt:
+      - GetProductFunctionRole
+      - Arn
+  intellidataProductTable:
+    Description: DynamoDB table ARN
+    Value:
+      Fn::GetAtt:
+      - intellidataProductTable
+      - Arn
+  intellidataEmployeeAPI:
+    Description: API Gateway endpoint URL for Prod stage for nrt_post function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataEmployeeAPI/
+  PostemployeeFunction:
+    Description: NRT Post Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - PostemployeeFunction
+      - Arn
+  PostemployeeFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Post function
+    Value:
+      Fn::GetAtt:
+      - PostemployeeFunctionRole
+      - Arn
+  GetemployeeFunction:
+    Description: NRT Get Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - GetemployeeFunction
+      - Arn
+  GetemployeeFunctionIamRole:
+    Description: Implicit IAM Role created for NRT Get function
+    Value:
+      Fn::GetAtt:
+      - GetemployeeFunctionRole
+      - Arn
+  intellidataEmployeeTable:
+    Description: DynamoDB table ARN
+    Value:
+      Fn::GetAtt:
+      - intellidataEmployeeTable
+      - Arn

@@ -8,11 +8,11 @@ import json
 def lambda_handler(event, context):
     # TODO implement
     glue = boto3.client(service_name='glue',
-    endpoint_url='https://glue.us-east-1.amazonaws.com')
+                         endpoint_url='https://glue.us-east-1.amazonaws.com')
 
     #Create a job. You must use glueetl as the name for the ETL command, as shown in the following code:
 
-    myJob = glue.create_job(Name='iestandardization', Role='AWSGlueServiceRole-iegluerole', Command={'Name': 'glueetl', 'ScriptLocation': 's3://aws-glue-scripts-215632354817-us-east-1/root/iestandardization'})
+    myJob = glue.create_job(Name='intellidata-glue-job', Role='AWSGlueServiceRole', Command={'Name': 'glueetl', 'ScriptLocation': 's3://aws-glue-scripts-321504535921-us-east-1/root/intellidata-glue-job'})
 
     #Start a new run of the job that you created in the previous step:
 

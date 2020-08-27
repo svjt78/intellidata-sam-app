@@ -9,15 +9,35 @@ Globals:
   Function:
     Timeout: 180
 Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
   IECrawlerTriggerFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: s3://intellidatastatic1/07c0fc0d43359508ec306c854c7b6752
       Handler: IECrawlerTrigger.lambda_handler
       Runtime: python3.7
+      Events:
+        S3Bucket:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: S3Bucket
+            Events: s3:ObjectCreated:*
   IEStandardizeTriggerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic1/cad609dc1601b8c380d4cfe103c19c29
+      CodeUri: s3://intellidatastatic1/a63abca305de041ddf8367a04bdf55d7
       Handler: IEStandardizeTrigger.lambda_handler
       Runtime: python3.7
+  AllowS3ToCallLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: IECrawlerTriggerFunction
+      Principal: s3.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+        - S3Bucket
+        - Arn

@@ -1,0 +1,830 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+
+  Sample SAM Template for sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 180
+
+Resources:
+
+  # S3 Bucket
+  S3Bucket1:
+    Type: AWS::S3::Bucket
+
+  S3Bucket2:
+    Type: AWS::S3::Bucket
+
+  #transmission functions
+  PosttransmissionFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: transmissions/transmissionpost/
+      Handler: transmissionpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataTransmissionAPI
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataTransmissionTable'
+
+
+  GettransmissionFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: transmissions/transmissionget/
+        Handler: transmissionget.lambda_handler
+        Runtime: python3.7
+        Events:
+          intellidataTransmissionAPI:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              Path: /intellidataTransmissionAPI/latest
+              Method: get
+        Policies:
+                - Version: '2012-10-17'
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                        - 'dynamodb:GetItem'
+                        - 'dynamodb:Query'
+                      Resource:
+                        'Fn::Join':
+                          - ''
+                          - - 'arn:aws:dynamodb:'
+                            - Ref: 'AWS::Region'
+                            - ':'
+                            - Ref: 'AWS::AccountId'
+                            - ':table/intellidataTransmissionTable'
+
+  RefreshtransmissionFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+          CodeUri: transmissions/refreshtransmission/
+          Handler: refreshtransmission.lambda_handler
+          Runtime: python3.7
+          Events:
+            intellidataTransmissionAPI:
+              Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+              Properties:
+                Path: /intellidataTransmissionAPI/refresh
+                Method: get
+          Policies:
+                  - Version: '2012-10-17'
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - 'dynamodb:GetItem'
+                          - 'dynamodb:Query'
+                        Resource:
+                          'Fn::Join':
+                            - ''
+                            - - 'arn:aws:dynamodb:'
+                              - Ref: 'AWS::Region'
+                              - ':'
+                              - Ref: 'AWS::AccountId'
+                              - ':table/intellidataTransmissionTable'
+
+  GettransmissionHistoryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: transmissions/transmissiongethistory/
+      Handler: transmissiongethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataTransmissionAPI/history
+            Method: get
+      Policies:
+              - Version: '2012-10-17'
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'dynamodb:GetItem'
+                      - 'dynamodb:Query'
+                    Resource:
+                      'Fn::Join':
+                        - ''
+                        - - 'arn:aws:dynamodb:'
+                          - Ref: 'AWS::Region'
+                          - ':'
+                          - Ref: 'AWS::AccountId'
+                          - ':table/intellidataTransmissionTable'
+
+
+  BulkPosttransmissionFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: transmissions/bulktransmissionpost/
+      Handler: bulktransmissionpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataTransmissionAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataTransmissionAPI/upload
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataTransmissionTable'
+
+
+  intellidataTransmissionTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: intellidataTransmissionTable
+      AttributeDefinitions:
+        - AttributeName: TRANSMISSION_ID
+          AttributeType: S
+        - AttributeName: ITEM_ID
+          AttributeType: N
+      KeySchema:
+        - AttributeName: TRANSMISSION_ID
+          KeyType: HASH
+        - AttributeName: ITEM_ID
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  #employer functions
+  PostemployerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employers/employerpost/
+      Handler: employerpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployerAPI
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataEmployerTable'
+
+
+  GetemployerFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: employers/employerget/
+        Handler: employerget.lambda_handler
+        Runtime: python3.7
+        Events:
+          intellidataEmployerAPI:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              Path: /intellidataEmployerAPI/latest
+              Method: get
+        Policies:
+                - Version: '2012-10-17'
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                        - 'dynamodb:GetItem'
+                        - 'dynamodb:Query'
+                      Resource:
+                        'Fn::Join':
+                          - ''
+                          - - 'arn:aws:dynamodb:'
+                            - Ref: 'AWS::Region'
+                            - ':'
+                            - Ref: 'AWS::AccountId'
+                            - ':table/intellidataEmployerTable'
+
+  RefreshemployerFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+          CodeUri: employers/refreshemployer/
+          Handler: refreshemployer.lambda_handler
+          Runtime: python3.7
+          Events:
+            intellidataEmployerAPI:
+              Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+              Properties:
+                Path: /intellidataEmployerAPI/refresh
+                Method: get
+          Policies:
+                  - Version: '2012-10-17'
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - 'dynamodb:GetItem'
+                          - 'dynamodb:Query'
+                        Resource:
+                          'Fn::Join':
+                            - ''
+                            - - 'arn:aws:dynamodb:'
+                              - Ref: 'AWS::Region'
+                              - ':'
+                              - Ref: 'AWS::AccountId'
+                              - ':table/intellidataEmployerTable'
+
+  GetemployerHistoryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employers/employergethistory/
+      Handler: employergethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployerAPI/history
+            Method: get
+      Policies:
+              - Version: '2012-10-17'
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'dynamodb:GetItem'
+                      - 'dynamodb:Query'
+                    Resource:
+                      'Fn::Join':
+                        - ''
+                        - - 'arn:aws:dynamodb:'
+                          - Ref: 'AWS::Region'
+                          - ':'
+                          - Ref: 'AWS::AccountId'
+                          - ':table/intellidataEmployerTable'
+
+
+  BulkPostemployerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employers/bulkemployerpost/
+      Handler: bulkemployerpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployerAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployerAPI/upload
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataEmployerTable'
+
+
+  intellidataEmployerTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: intellidataEmployerTable
+      AttributeDefinitions:
+        - AttributeName: EMPLOYER_ID
+          AttributeType: S
+        - AttributeName: ITEM_ID
+          AttributeType: N
+      KeySchema:
+        - AttributeName: EMPLOYER_ID
+          KeyType: HASH
+        - AttributeName: ITEM_ID
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+
+   #product function
+  PostProductFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: products/productpost/
+      Handler: productpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataProductAPI
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataProductTable'
+
+
+  GetProductFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: products/productget/
+        Handler: productget.lambda_handler
+        Runtime: python3.7
+        Events:
+          intellidataProductAPI:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              Path: /intellidataProductAPI/latest
+              Method: get
+        Policies:
+                - Version: '2012-10-17'
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                        - 'dynamodb:GetItem'
+                        - 'dynamodb:Query'
+                      Resource:
+                        'Fn::Join':
+                          - ''
+                          - - 'arn:aws:dynamodb:'
+                            - Ref: 'AWS::Region'
+                            - ':'
+                            - Ref: 'AWS::AccountId'
+                            - ':table/intellidataProductTable'
+
+  RefreshProductFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+          CodeUri: products/refreshproduct/
+          Handler: refreshproduct.lambda_handler
+          Runtime: python3.7
+          Events:
+            intellidataProductAPI:
+              Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+              Properties:
+                Path: /intellidataProductAPI/refresh
+                Method: get
+          Policies:
+                  - Version: '2012-10-17'
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - 'dynamodb:GetItem'
+                          - 'dynamodb:Query'
+                        Resource:
+                          'Fn::Join':
+                            - ''
+                            - - 'arn:aws:dynamodb:'
+                              - Ref: 'AWS::Region'
+                              - ':'
+                              - Ref: 'AWS::AccountId'
+                              - ':table/intellidataProductTable'
+
+  GetProductHistoryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: products/productgethistory/
+      Handler: productgethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataProductAPI/history
+            Method: get
+      Policies:
+              - Version: '2012-10-17'
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'dynamodb:GetItem'
+                      - 'dynamodb:Query'
+                    Resource:
+                      'Fn::Join':
+                        - ''
+                        - - 'arn:aws:dynamodb:'
+                          - Ref: 'AWS::Region'
+                          - ':'
+                          - Ref: 'AWS::AccountId'
+                          - ':table/intellidataProductTable'
+
+
+  BulkPostProductFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: products/bulkproductpost/
+      Handler: bulkproductpost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataProductAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataProductAPI/upload
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataProductTable'
+
+
+  intellidataProductTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: intellidataProductTable
+      AttributeDefinitions:
+        - AttributeName: PRODUCT_ID
+          AttributeType: S
+        - AttributeName: ITEM_ID
+          AttributeType: N
+      KeySchema:
+        - AttributeName: PRODUCT_ID
+          KeyType: HASH
+        - AttributeName: ITEM_ID
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+    #Employee function
+  PostemployeeFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employees/employeepost/
+      Handler: employeepost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployeeAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployeeAPI
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataEmployeeTable'
+
+
+  GetemployeeFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: employees/employeeget/
+        Handler: employeeget.lambda_handler
+        Runtime: python3.7
+        Events:
+          intellidataEmployeeAPI:
+            Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+            Properties:
+              Path: /intellidataEmployeeAPI/latest
+              Method: get
+        Policies:
+                - Version: '2012-10-17'
+                  Statement:
+                    - Effect: Allow
+                      Action:
+                        - 'dynamodb:GetItem'
+                        - 'dynamodb:Query'
+                      Resource:
+                        'Fn::Join':
+                          - ''
+                          - - 'arn:aws:dynamodb:'
+                            - Ref: 'AWS::Region'
+                            - ':'
+                            - Ref: 'AWS::AccountId'
+                            - ':table/intellidataEmployeeTable'
+
+  RefreshemployeeFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+          CodeUri: employees/refreshemployee/
+          Handler: refreshemployee.lambda_handler
+          Runtime: python3.7
+          Events:
+            intellidataEmployeeAPI:
+              Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+              Properties:
+                Path: /intellidataEmployeeAPI/refresh
+                Method: get
+          Policies:
+                  - Version: '2012-10-17'
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - 'dynamodb:GetItem'
+                          - 'dynamodb:Query'
+                        Resource:
+                          'Fn::Join':
+                            - ''
+                            - - 'arn:aws:dynamodb:'
+                              - Ref: 'AWS::Region'
+                              - ':'
+                              - Ref: 'AWS::AccountId'
+                              - ':table/intellidataEmployeeTable'
+
+  GetemployeeHistoryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employees/employeegethistory/
+      Handler: employeegethistory.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployeeAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployeeAPI/history
+            Method: get
+      Policies:
+              - Version: '2012-10-17'
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - 'dynamodb:GetItem'
+                      - 'dynamodb:Query'
+                    Resource:
+                      'Fn::Join':
+                        - ''
+                        - - 'arn:aws:dynamodb:'
+                          - Ref: 'AWS::Region'
+                          - ':'
+                          - Ref: 'AWS::AccountId'
+                          - ':table/intellidataEmployeeTable'
+
+
+  BulkPostemployeeFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: employees/bulkemployeepost/
+      Handler: bulkemployeepost.lambda_handler
+      Runtime: python3.7
+      Events:
+        intellidataEmployeeAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /intellidataEmployeeAPI/upload
+            Method: post
+      Policies:
+          - Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                Resource:
+                  'Fn::Join':
+                    - ''
+                    - - 'arn:aws:dynamodb:'
+                      - Ref: 'AWS::Region'
+                      - ':'
+                      - Ref: 'AWS::AccountId'
+                      - ':table/intellidataEmployeeTable'
+
+
+  intellidataEmployeeTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: intellidataEmployeeTable
+      AttributeDefinitions:
+        - AttributeName: EMPLOYEE_ID
+          AttributeType: S
+        - AttributeName: ITEM_ID
+          AttributeType: N
+      KeySchema:
+        - AttributeName: EMPLOYEE_ID
+          KeyType: HASH
+        - AttributeName: ITEM_ID
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+
+#external feed Resources
+
+    #Functiions
+  IECrawlerTriggerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: standalone-lambdas/IECrawlerTrigger/
+      Handler: IECrawlerTrigger.lambda_handler
+      Runtime: python3.7
+      Events:
+        S3Bucket:
+          Type: S3
+          Properties:
+            Bucket: !Ref S3Bucket1
+            Events: 's3:ObjectCreated:*'
+    Policies:
+      - AWSGlueConsoleFullAccess
+
+
+  IEStandardizeTriggerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: standalone-lambdas/IEStandardizeTrigger/
+      Handler: IEStandardizeTrigger.lambda_handler
+      Runtime: python3.7
+
+  IntellidataAPIFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: standalone-lambdas/IntellidataAPI/
+      Handler: IntellidataAPI.lambda_handler
+      Runtime: python3.7
+      Events:
+        S3Bucket:
+          Type: S3
+          Properties:
+            Bucket: !Ref S3Bucket2
+            Events: 's3:ObjectCreated:*'
+
+
+
+   # Permissions
+  AllowS3ToCallIECrawlerTrigger:
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !Ref IECrawlerTriggerFunction
+        Principal: s3.amazonaws.com
+        SourceArn: !GetAtt S3Bucket1.Arn
+
+
+  AllowS3ToCallIntellidataAPI:
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: 'lambda:InvokeFunction'
+        FunctionName: !Ref IntellidataAPIFunction
+        Principal: s3.amazonaws.com
+        SourceArn: !GetAtt S3Bucket2.Arn
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+
+#transmission output
+  intellidataTransmissionAPI:
+    Description: "API Gateway endpoint URL for Prod stage for nrt_post function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataTransmissionAPI/"
+  PosttransmissionFunction:
+    Description: "NRT Post Lambda Function ARN"
+    Value: !GetAtt PosttransmissionFunction.Arn
+  PosttransmissionFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Post function"
+    Value: !GetAtt PosttransmissionFunctionRole.Arn
+  GettransmissionFunction:
+    Description: "NRT Get Lambda Function ARN"
+    Value: !GetAtt GettransmissionFunction.Arn
+  GettransmissionFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Get function"
+    Value: !GetAtt GettransmissionFunctionRole.Arn
+  intellidataTransmissionTable:
+    Description: "DynamoDB table ARN"
+    Value: !GetAtt intellidataTransmissionTable.Arn
+
+#Employer output
+  intellidataEmployerAPI:
+    Description: "API Gateway endpoint URL for Prod stage for nrt_post function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataEmployerAPI/"
+  PostemployerFunction:
+    Description: "NRT Post Lambda Function ARN"
+    Value: !GetAtt PostemployerFunction.Arn
+  PostemployerFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Post function"
+    Value: !GetAtt PostemployerFunctionRole.Arn
+  GetemployerFunction:
+    Description: "NRT Get Lambda Function ARN"
+    Value: !GetAtt GetemployerFunction.Arn
+  GetemployerFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Get function"
+    Value: !GetAtt GetemployerFunctionRole.Arn
+  intellidataEmployerTable:
+    Description: "DynamoDB table ARN"
+    Value: !GetAtt intellidataEmployerTable.Arn
+
+#product output
+  intellidataProductAPI:
+    Description: "API Gateway endpoint URL for Prod stage for nrt_post function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/intellidataProductAPI/"
+  PostProductFunction:
+    Description: "NRT Post Lambda Function ARN"
+    Value: !GetAtt PostProductFunction.Arn
+  PostProductFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Post function"
+    Value: !GetAtt PostProductFunctionRole.Arn
+  GetProductFunction:
+    Description: "NRT Get Lambda Function ARN"
+    Value: !GetAtt GetProductFunction.Arn
+  GetProductFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Get function"
+    Value: !GetAtt GetProductFunctionRole.Arn
+  intellidataProductTable:
+    Description: "DynamoDB table ARN"
+    Value: !GetAtt intellidataProductTable.Arn
+
+#Employee output
+  intellidataEmployeeAPI:
+    Description: "API Gateway endpoint URL for Prod stage for nrt_post function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/mem/intellidataEmployeeAPI/"
+  PostemployeeFunction:
+    Description: "NRT Post Lambda Function ARN"
+    Value: !GetAtt PostemployeeFunction.Arn
+  PostemployeeFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Post function"
+    Value: !GetAtt PostemployeeFunctionRole.Arn
+  GetemployeeFunction:
+    Description: "NRT Get Lambda Function ARN"
+    Value: !GetAtt GetemployeeFunction.Arn
+  GetemployeeFunctionIamRole:
+    Description: "Implicit IAM Role created for NRT Get function"
+    Value: !GetAtt GetemployeeFunctionRole.Arn
+  intellidataEmployeeTable:
+    Description: "DynamoDB table ARN"
+    Value: !GetAtt intellidataEmployeeTable.Arn

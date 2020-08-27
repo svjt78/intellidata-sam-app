@@ -1,0 +1,3 @@
+sam package     --template-file intellidata-master-template.yml     --output-template-file intellidata-master-package.yml --s3-bucket intellidatastatic1
+
+sam deploy --template-file intellidata-master-package.yml --capabilities CAPABILITY_IAM --stack-name intellidatastack

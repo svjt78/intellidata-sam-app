@@ -12,12 +12,24 @@ Globals:
     Timeout: 180
 
 Resources:
+
+  # S3 Bucket
+  S3Bucket:
+    Type: AWS::S3::Bucket
+
+    #Functiions
   IECrawlerTriggerFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: standalone-lambdas/IECrawlerTrigger/
       Handler: IECrawlerTrigger.lambda_handler
       Runtime: python3.7
+      Events:
+        S3Bucket:
+          Type: S3
+          Properties:
+            Bucket: !Ref S3Bucket
+            Events: 's3:ObjectCreated:*'
 
   IEStandardizeTriggerFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -25,3 +37,13 @@ Resources:
       CodeUri: standalone-lambdas/IEStandardizeTrigger/
       Handler: IEStandardizeTrigger.lambda_handler
       Runtime: python3.7
+
+
+   # Permissions
+  AllowS3ToCallLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref IECrawlerTriggerFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt S3Bucket.Arn

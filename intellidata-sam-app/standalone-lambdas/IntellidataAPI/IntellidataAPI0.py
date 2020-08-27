@@ -1,12 +1,28 @@
-dynamodb = boto3.resource('dynamodb')
+import boto3
+import json
 
-	table = dynamodb.Table('ENROLLMENT')
+def lambda_handler(event, context):
+
+	print (event)
+
+	s3 = boto3.resource('s3')
+    obj_to_read = s3.Object('intellidatastatic1', 'media/employers.csv')
+    body = obj_to_read.get()['Body'].read()
+
+	s3 = boto3.resource('s3')
+	obj = s3.Object('my-bucket','hello.json')
+	data = obj.get()['Body'].read()
+	print data
+
+	bucket = 'intellidatastack-s3bucket2-1b2bujg9v2qau'
 
 	for obj in bucket.objects.all():
     		key = obj.key
     		body = obj.get()['Body'].read()
     		data = body.decode("utf-8")
     		data1 = data.split('\n')
+
+			print(data1)
 
     		#client.delete_object(Bucket=bucket, Key=key)
     		#client.Object(bucket, key).delete()
@@ -37,7 +53,9 @@ dynamodb = boto3.resource('dynamodb')
     					}
 					)
 
+					bucket.objects.all().delete()
+					break
+
 
 
 			#End of code
-             

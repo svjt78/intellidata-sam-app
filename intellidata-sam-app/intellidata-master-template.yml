@@ -19,6 +19,12 @@ Resources:
   S3Bucket2:
     Type: AWS::S3::Bucket
 
+  S3Bucket3:
+    Type: AWS::S3::Bucket
+
+  S3Bucket4:
+    Type: AWS::S3::Bucket
+
   #transmission functions
   PosttransmissionFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -685,7 +691,7 @@ Resources:
         WriteCapacityUnits: 5
 
 
-#external feed Resources
+#external feed Resources for employers
 
     #Functiions
   IECrawlerTriggerFunction:
@@ -743,6 +749,66 @@ Resources:
         FunctionName: !Ref IntellidataAPIFunction
         Principal: s3.amazonaws.com
         SourceArn: !GetAtt S3Bucket2.Arn
+
+  #external feed Resources for employees
+
+      #Functiions
+  EmployeeIECrawlerTriggerFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: standalone-lambdas/EmployeeIECrawlerTrigger/
+        Handler: EmployeeIECrawlerTrigger.lambda_handler
+        Runtime: python3.7
+        Events:
+          S3Bucket:
+            Type: S3
+            Properties:
+              Bucket: !Ref S3Bucket3
+              Events: 's3:ObjectCreated:*'
+      Policies:
+        - AWSGlueConsoleFullAccess
+
+
+  EmployeeIEStandardizeTriggerFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: standalone-lambdas/EmployeeIEStandardizeTrigger/
+        Handler: EmployeeIEStandardizeTrigger.lambda_handler
+        Runtime: python3.7
+
+  EmployeeIntellidataAPIFunction:
+      Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+      Properties:
+        CodeUri: standalone-lambdas/EmployeeIntellidataAPI/
+        Handler: EmployeeIntellidataAPI.lambda_handler
+        Runtime: python3.7
+        Events:
+          S3Bucket:
+            Type: S3
+            Properties:
+              Bucket: !Ref S3Bucket4
+              Events: 's3:ObjectCreated:*'
+
+
+
+     # Permissions
+  AllowS3ToCallEmployeeIECrawlerTrigger:
+        Type: AWS::Lambda::Permission
+        Properties:
+          Action: 'lambda:InvokeFunction'
+          FunctionName: !Ref EmployeeIECrawlerTriggerFunction
+          Principal: s3.amazonaws.com
+          SourceArn: !GetAtt S3Bucket3.Arn
+
+
+  AllowS3ToCallEmployeeIntellidataAPI:
+        Type: AWS::Lambda::Permission
+        Properties:
+          Action: 'lambda:InvokeFunction'
+          FunctionName: !Ref EmployeeIntellidataAPIFunction
+          Principal: s3.amazonaws.com
+          SourceArn: !GetAtt S3Bucket4.Arn
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

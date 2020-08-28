@@ -13,6 +13,10 @@ Resources:
     Type: AWS::S3::Bucket
   S3Bucket2:
     Type: AWS::S3::Bucket
+  S3Bucket3:
+    Type: AWS::S3::Bucket
+  S3Bucket4:
+    Type: AWS::S3::Bucket
   PosttransmissionFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -172,7 +176,7 @@ Resources:
   PostemployerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic1/5877cd65d1b2c49cd5fdac8270744228
+      CodeUri: s3://intellidatastatic1/0e14abd43dae0a70a89250d137a2cd21
       Handler: employerpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -282,7 +286,7 @@ Resources:
   BulkPostemployerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic1/2259fb8d7e532e5247389adbab5ba632
+      CodeUri: s3://intellidatastatic1/4c859ebea0f6cb34e776dbb60ac1bce6
       Handler: bulkemployerpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -484,7 +488,7 @@ Resources:
   PostemployeeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic1/d6ac167a04ce2c2c24a663869ac9e04a
+      CodeUri: s3://intellidatastatic1/f3824a014020e40f10df5982cabce399
       Handler: employeepost.lambda_handler
       Runtime: python3.7
       Events:
@@ -594,7 +598,7 @@ Resources:
   BulkPostemployeeFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic1/e6c558a4835bc4bdd4aa83ca869e73a4
+      CodeUri: s3://intellidatastatic1/c4981375080cd520630ce0fd7c70b431
       Handler: bulkemployeepost.lambda_handler
       Runtime: python3.7
       Events:
@@ -661,7 +665,7 @@ Resources:
   IntellidataAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic1/99baaaa8e41fa1a847709a5c25393b83
+      CodeUri: s3://intellidatastatic1/edcef90e6bc618de0428b3248cc33f4f
       Handler: IntellidataAPI.lambda_handler
       Runtime: python3.7
       Events:
@@ -692,6 +696,62 @@ Resources:
       SourceArn:
         Fn::GetAtt:
         - S3Bucket2
+        - Arn
+  EmployeeIECrawlerTriggerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/f6ed5849a0442cd526a7fbab5bcd255c
+      Handler: EmployeeIECrawlerTrigger.lambda_handler
+      Runtime: python3.7
+      Events:
+        S3Bucket:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: S3Bucket3
+            Events: s3:ObjectCreated:*
+    Policies:
+    - AWSGlueConsoleFullAccess
+  EmployeeIEStandardizeTriggerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/c84c4c5f637f5013ea6859ad21ccdace
+      Handler: EmployeeIEStandardizeTrigger.lambda_handler
+      Runtime: python3.7
+  EmployeeIntellidataAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://intellidatastatic1/d2e42497465a45bacff96b36a93f3dec
+      Handler: EmployeeIntellidataAPI.lambda_handler
+      Runtime: python3.7
+      Events:
+        S3Bucket:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: S3Bucket4
+            Events: s3:ObjectCreated:*
+  AllowS3ToCallEmployeeIECrawlerTrigger:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: EmployeeIECrawlerTriggerFunction
+      Principal: s3.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+        - S3Bucket3
+        - Arn
+  AllowS3ToCallEmployeeIntellidataAPI:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: EmployeeIntellidataAPIFunction
+      Principal: s3.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+        - S3Bucket4
         - Arn
 Outputs:
   intellidataTransmissionAPI:

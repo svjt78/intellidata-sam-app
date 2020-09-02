@@ -61,6 +61,7 @@ def lambda_handler(event, context):
 					'SMS': data[ix]["sms"],
 					'EMAILER': data[ix]["emailer"],
 					'SOURCE': data[ix]["source"],
+					'EMPLOYERID': data[ix]["employerid"],
 					'ARTEFACT': data[ix]["artefact"],
 					'CONNECTION': data[ix]["backend_SOR_connection"],
 					'RESPONSE': data[ix]["response"],

@@ -176,7 +176,7 @@ Resources:
   PostemployerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic1/1bf7be2bace442b41dfa324fe37b34ad
+      CodeUri: s3://intellidatastatic1/3c32e48f8741998c1f778b6f9e83c936
       Handler: employerpost.lambda_handler
       Runtime: python3.7
       Events:
@@ -286,7 +286,7 @@ Resources:
   BulkPostemployerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://intellidatastatic1/7a471fa3155d613af250242368f37e6c
+      CodeUri: s3://intellidatastatic1/ed036f1f3cc80f725dca22f02caf2882
       Handler: bulkemployerpost.lambda_handler
       Runtime: python3.7
       Events:

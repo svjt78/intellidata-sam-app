@@ -37,6 +37,7 @@ def lambda_handler(event, context):
 					'STATE': data[ix]["state"],
 					'ZIPCODE': data[ix]["zipcode"],
 					'PURPOSE': data[ix]["purpose"],
+					'PLANADMIN_EMAIL': data[ix]["planadmin_email"],
 					'PHOTO': data[ix]["photo"],
 					'TRANSMISSION': data[ix]["transmission"],
 					'SOURCE': data[ix]["source"],
